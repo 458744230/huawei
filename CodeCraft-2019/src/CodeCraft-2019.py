@@ -1,6 +1,7 @@
 import logging
 import sys
 import Entity
+
 logging.basicConfig(level=logging.DEBUG,
                     filename='../../logs/CodeCraft-2019.log',
                     format='[%(asctime)s] %(levelname)s [%(funcName)s: %(filename)s, %(lineno)d] %(message)s',
@@ -23,11 +24,13 @@ def main():
     logging.info("cross_path is %s" % (cross_path))
     logging.info("answer_path is %s" % (answer_path))
 
-    carDict, crossDict, roadDict = Entity.read('config')
+    carlist, crosslist, roadlist = Entity.read('config')
 
-    print(len(carDict))
-    print(len(crossDict))
-    print(len(roadDict))
+    print(len(carlist))
+    print(len(crosslist))
+    print(len(roadlist))
+
+
 # to read input file
 # process
 # to write output file
