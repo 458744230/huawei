@@ -10,6 +10,7 @@ logging.basicConfig(level=logging.DEBUG,
 
 
 def main():
+#强哥nb
     if len(sys.argv) != 5:
         logging.info('please input args: car_path, road_path, cross_path, answerPath')
         exit(1)
