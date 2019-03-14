@@ -26,6 +26,9 @@ def main():
 
     carlist, crosslist, roadlist = Entity.read('config')
 
+    map = Entity.Map(roadlist, crosslist)
+    map.plot()
+
     print(len(carlist))
     print(len(crosslist))
     print(len(roadlist))

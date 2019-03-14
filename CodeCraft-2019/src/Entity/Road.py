@@ -1,5 +1,6 @@
 class Road:
     def __init__(self, input=[]):
+        input = list(map(int, input))
         self.id = input[0]
         self.length = input[1]
         self.speed = input[2]
