@@ -20,3 +20,6 @@ class Cross:
         self.x = x
         self.y = y
         self.flag = 1
+
+    def getPos(self):
+        return self.x, self.y

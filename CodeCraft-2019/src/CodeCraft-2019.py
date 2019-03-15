@@ -24,9 +24,9 @@ def main():
     logging.info("cross_path is %s" % (cross_path))
     logging.info("answer_path is %s" % (answer_path))
 
-    carlist, crosslist, roadlist = Entity.read('config')
+    carlist, crosslist, roadlist = Entity.read('config_1')
 
-    map = Entity.Map(roadlist, crosslist)
+    map = Entity.Map(roadlist, crosslist, carlist)
     map.plot()
 
     print(len(carlist))

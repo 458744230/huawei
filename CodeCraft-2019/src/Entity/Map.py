@@ -1,9 +1,11 @@
 import matplotlib.pyplot as plt
 import queue
 
+from matplotlib.lines import Line2D
+
 
 class Map:
-    def __init__(self, road_list, cross_list):
+    def __init__(self, road_list, cross_list, car_list):
         temp_dict = {}
         for road in road_list:
             temp_dict[road.id] = road
@@ -17,6 +19,10 @@ class Map:
             road.from_cross = temp_dict[road.from_id]
             road.to_cross = temp_dict[road.to_id]
 
+        for car in car_list:
+            car.from_cross = temp_dict[car.fro]
+            car.to_cross = temp_dict[car.to]
+
         zero_cross = None
         # 暂时将-1，*，*，-1的cross当作左上顶点
         for cross in cross_list:
@@ -26,6 +32,8 @@ class Map:
         self.zero_cross = zero_cross
         self.road_list = road_list
         self.cross_list = cross_list
+        self.car_list = car_list
+        self.plot_car = False
 
     def plot(self):
 
@@ -60,5 +68,25 @@ class Map:
                 c0.next_cross(3).setpos(x - c0.road[3].length, y)
                 X.append(x - c0.road[3].length)
                 Y.append(y)
+        _, ax = plt.subplots()
+        for road in self.road_list:
+            points = [road.from_cross.getPos(), road.to_cross.getPos()]
+            (x, y) = zip(*points)
+            if road.isDuplex == 1:
+                ax.add_line(Line2D(x, y, linewidth=road.channel,
+                                   color='blue'))
+                plt.annotate('%d/%d' % (road.id, road.channel), xy=road.getmid())
+            else:
+                ax.add_line(Line2D(x, y, linewidth=road.channel,
+                                   color='red', linestyle='-.'))
+                plt.annotate('%d/%d' % (road.id, road.channel), xy=road.getmid())
+        if self.plot_car:
+            for car in self.car_list:
+                points = [car.from_cross.getPos(), car.to_cross.getPos()]
+                (x, y) = zip(*points)
+                ax.add_line(Line2D(x, y, color='yellow', linestyle='-.'))
+                plt.annotate('%d/%d' % (car.id, car.planTime), xy=car.getmid())
+
+        plt.plot()
         plt.scatter(X, Y)
         plt.show()
