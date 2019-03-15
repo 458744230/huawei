@@ -37,6 +37,7 @@ class Map:
 
     def plot(self):
 
+        _, ax = plt.subplots()
         self.zero_cross.setpos(10, 10)
         X = [10]
         Y = [10]
@@ -48,6 +49,7 @@ class Map:
                 continue
             x = c0.x
             y = c0.y
+            plt.annotate(c0.id, xy=(x, y))
             if c0.road[0] is not None and c0.next_cross(0).flag == 0:
                 que.put(c0.next_cross(0))
                 c0.next_cross(0).setpos(x, y - c0.road[0].length)
@@ -68,7 +70,6 @@ class Map:
                 c0.next_cross(3).setpos(x - c0.road[3].length, y)
                 X.append(x - c0.road[3].length)
                 Y.append(y)
-        _, ax = plt.subplots()
         for road in self.road_list:
             points = [road.from_cross.getPos(), road.to_cross.getPos()]
             (x, y) = zip(*points)
