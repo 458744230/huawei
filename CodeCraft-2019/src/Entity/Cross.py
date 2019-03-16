@@ -8,7 +8,7 @@ class Cross:
         self.y = 0
         self.flag = 0
 
-    def next_cross(self, pos):
+    def next_cross(self, pos):#不懂
         if pos < 0 | pos > 3:
             return None
         if self == self.road[pos].from_cross:
