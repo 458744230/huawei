@@ -1,3 +1,4 @@
+# -----coding:utf-8------
 class Cross:
     def __init__(self, input_data=[]):
         input_data = list(map(int, input_data))
@@ -9,7 +10,7 @@ class Cross:
         self.flag = 0
         self.magical_garage = []  # 车库里的车应按计划出行时间-id 升序排序
 
-    def next_cross(self, pos):#不懂
+    def next_cross(self, pos):  # 当前路口的下个路口，0~3分别表示上右下左
         if pos < 0 | pos > 3:
             return None
         if self == self.road[pos].from_cross:

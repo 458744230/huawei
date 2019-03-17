@@ -1,3 +1,4 @@
+# -----coding:utf-8------
 class Car:
     def __init__(self, input_data=[]):#car的数据结构，from_cross为指针，拼接
         input_data = list(map(int, input_data))

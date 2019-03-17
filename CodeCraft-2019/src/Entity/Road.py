@@ -1,3 +1,4 @@
+# -----coding:utf-8------
 class Road:
     def __init__(self, input_data=[]):
         input_data = list(map(int, input_data))
