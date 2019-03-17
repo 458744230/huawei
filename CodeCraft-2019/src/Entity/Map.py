@@ -52,41 +52,41 @@ class Map:
             plt.annotate(c0.id, xy=(x, y))
             if c0.road[0] is not None and c0.next_cross(0).flag == 0:
                 que.put(c0.next_cross(0))
-                c0.next_cross(0).setpos(x, y - c0.road[0].length)
+                c0.next_cross(0).set_pos(x, y - c0.road[0].length)
                 X.append(x)
                 Y.append(y - c0.road[0].length)
             if c0.road[1] is not None and c0.next_cross(1).flag == 0:
                 que.put(c0.next_cross(1))
-                c0.next_cross(1).setpos(x + c0.road[1].length, y)
+                c0.next_cross(1).set_pos(x + c0.road[1].length, y)
                 X.append(x + c0.road[1].length)
                 Y.append(y)
             if c0.road[2] is not None and c0.next_cross(2).flag == 0:
                 que.put(c0.next_cross(2))
-                c0.next_cross(2).setpos(x, y + c0.road[2].length)
+                c0.next_cross(2).set_pos(x, y + c0.road[2].length)
                 X.append(x)
                 Y.append(y + c0.road[2].length)
             if c0.road[3] is not None and c0.next_cross(3).flag == 0:
                 que.put(c0.next_cross(3))
-                c0.next_cross(3).setpos(x - c0.road[3].length, y)
+                c0.next_cross(3).set_pos(x - c0.road[3].length, y)
                 X.append(x - c0.road[3].length)
                 Y.append(y)
         for road in self.road_list:
-            points = [road.from_cross.getPos(), road.to_cross.getPos()]
+            points = [road.from_cross.get_pos(), road.to_cross.get_pos()]
             (x, y) = zip(*points)
             if road.isDuplex == 1:
                 ax.add_line(Line2D(x, y, linewidth=road.channel,
                                    color='blue'))
-                plt.annotate('%d/%d' % (road.id, road.channel), xy=road.getmid())
+                plt.annotate('%d/%d' % (road.id, road.channel), xy=road.get_mid())
             else:
                 ax.add_line(Line2D(x, y, linewidth=road.channel,
                                    color='red', linestyle='-.'))
-                plt.annotate('%d/%d' % (road.id, road.channel), xy=road.getmid())
+                plt.annotate('%d/%d' % (road.id, road.channel), xy=road.get_mid())
         if self.plot_car:
             for car in self.car_list:
-                points = [car.from_cross.getPos(), car.to_cross.getPos()]
+                points = [car.from_cross.get_pos(), car.to_cross.get_pos()]
                 (x, y) = zip(*points)
                 ax.add_line(Line2D(x, y, color='yellow', linestyle='-.'))
-                plt.annotate('%d/%d' % (car.id, car.planTime), xy=car.getmid())
+                plt.annotate('%d/%d' % (car.id, car.planTime), xy=car.get_mid())
 
         plt.plot()
         plt.scatter(X, Y)

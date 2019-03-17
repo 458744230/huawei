@@ -24,14 +24,14 @@ def main():
     logging.info("cross_path is %s" % (cross_path))
     logging.info("answer_path is %s" % (answer_path))
 
-    carlist, crosslist, roadlist = Entity.read('config_1')
+    for i in range(10):
+        car_list, cross_list, road_list = Entity.read('config_%d' % (i + 1))
+        my_map = Entity.Map(road_list, cross_list, car_list)
+        my_map.plot()
 
-    map = Entity.Map(roadlist, crosslist, carlist)
-    map.plot()
-
-    print(len(carlist))
-    print(len(crosslist))
-    print(len(roadlist))
+    # print(len(car_list))
+    # print(len(cross_list))
+    # print(len(road_list))
 
 
 # to read input file
