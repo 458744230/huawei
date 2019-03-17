@@ -60,3 +60,4 @@ class Min_way:
         self.getpath(visit_path, self.path, start_node, end_node)
         visit_path.append(end_node)
         return visit_path
+

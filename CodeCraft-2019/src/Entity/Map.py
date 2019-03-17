@@ -7,26 +7,26 @@ from matplotlib.lines import Line2D
 
 class Map:
     def __init__(self, road_list, cross_list, car_list):
-        temp_dict = {}
+        temp_dict1 = {}
         for road in road_list:
-            temp_dict[road.id] = road
+            temp_dict1[road.id] = road
         for cross in cross_list:
             for i in range(4):
-                cross.road[i] = temp_dict.get(cross.roadId[i], None)
-        temp_dict = {}
+                cross.road[i] = temp_dict1.get(cross.roadId[i], None)
+        temp_dict2 = {}
         for cross in cross_list:
-            temp_dict[cross.id] = cross
+            temp_dict2[cross.id] = cross
         # 创建是否有路的邻接矩阵
         cross_to_road = [[None]*cross_list.__len__() for i in range(cross_list.__len__())]
         for road in road_list:
             cross_to_road[road.from_id-1][road.to_id-1] = road.id
             if road.is_duplex == 1:
                 cross_to_road[road.to_id-1][road.from_id-1] = road.id
-            road.from_cross = temp_dict[road.from_id]
-            road.to_cross = temp_dict[road.to_id]
+            road.from_cross = temp_dict2[road.from_id]
+            road.to_cross = temp_dict2[road.to_id]
         for car in car_list:
-            car.from_cross = temp_dict[car.fro]
-            car.to_cross = temp_dict[car.to]
+            car.from_cross = temp_dict2[car.fro]
+            car.to_cross = temp_dict2[car.to]
 
         zero_cross = None
         # 暂时将-1，*，*，-1的cross当作左上顶点
@@ -40,6 +40,7 @@ class Map:
         self.car_list = car_list
         self.plot_car = False
         self.cross_to_road = cross_to_road
+        self.road_dic = temp_dict1
 
     def plot(self):
 
