@@ -9,7 +9,7 @@ class Cross:
         self.flag = 0
         self.magical_garage = []  # 车库里的车应按计划出行时间-id 升序排序
 
-    def next_cross(self, pos):
+    def next_cross(self, pos):#不懂
         if pos < 0 | pos > 3:
             return None
         if self == self.road[pos].from_cross:

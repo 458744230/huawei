@@ -1,5 +1,5 @@
 class Car:
-    def __init__(self, input_data=[]):
+    def __init__(self, input_data=[]):#car的数据结构，from_cross为指针，拼接
         input_data = list(map(int, input_data))
         self.id = input_data[0]
         self.fro = input_data[1]
@@ -14,7 +14,7 @@ class Car:
         self.ch = 0
         self.direction = 0
 
-    def get_mid(self):
+    def get_mid(self):#画车道图用的
         return (self.from_cross.x + self.to_cross.x) / 2, (self.from_cross.y + self.to_cross.y) / 2
 
     def set_pos(self, road, direction, ch, pos):
