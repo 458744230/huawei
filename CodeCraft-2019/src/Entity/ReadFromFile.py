@@ -1,7 +1,7 @@
 # -----coding:utf-8------
-import Car
-import Cross
-import Road
+from Entity.Car import Car
+from Entity.Cross import Cross
+from Entity.Road import Road
 
 
 def read(carpath, crosspath, roadpath):
@@ -10,17 +10,17 @@ def read(carpath, crosspath, roadpath):
     with open(carpath, "r") as carFile:
         for line in carFile.readlines():
             if line[0] != '#':
-                carlist.append(Car.Car(parser(line)))
+                carlist.append(Car(parser(line)))
     crosslist = []
     with open(crosspath, "r") as crossFile:
         for line in crossFile.readlines():
             if line[0] != '#':
-                crosslist.append(Cross.Cross(parser(line)))
+                crosslist.append(Cross(parser(line)))
     roadlist = []
     with open(roadpath, "r") as roadFile:
         for line in roadFile.readlines():
             if line[0] != '#':
-                roadlist.append(Road.Road(parser(line)))
+                roadlist.append(Road(parser(line)))
 
     return carlist, crosslist, roadlist
 

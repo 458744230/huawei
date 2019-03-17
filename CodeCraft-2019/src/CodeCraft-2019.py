@@ -1,8 +1,8 @@
 # -----coding:utf-8------
 import logging
+import numpy as np
 import sys
 import Entity
-import numpy as np
 
 np.set_printoptions(threshold=np.inf)
 

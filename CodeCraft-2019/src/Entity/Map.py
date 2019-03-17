@@ -17,11 +17,11 @@ class Map:
         for cross in cross_list:
             temp_dict[cross.id] = cross
         # 创建是否有路的邻接矩阵
-        cross_to_road = [[None]*cross_list.__len__()]*cross_list.__len__()
+        # cross_to_road = [[None]*cross_list.__len__()]*cross_list.__len__()
         for road in road_list:
-            cross_to_road[road.from_id-1][road.to_id-1] = road.id
-            if road.is_duplex == 1:
-                cross_to_road[road.to_id-1][road.from_id-1] = road.id
+            # cross_to_road[road.from_id-1][road.to_id-1] = road.id
+            # if road.is_duplex == 1:
+            #     cross_to_road[road.to_id-1][road.from_id-1] = road.id
             road.from_cross = temp_dict[road.from_id]
             road.to_cross = temp_dict[road.to_id]
         for car in car_list:
@@ -39,7 +39,7 @@ class Map:
         self.cross_list = cross_list
         self.car_list = car_list
         self.plot_car = False
-        self.cross_to_road = cross_to_road
+        # self.cross_to_road = cross_to_road
 
     def plot(self):
 
