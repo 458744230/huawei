@@ -1,23 +1,30 @@
-import Car
-import Cross
-import Road
+# -----coding:utf-8------
+from Entity.Car import Car
+from Entity.Cross import Cross
+from Entity.Road import Road
 
-def read(tag):
-    path = "../" + tag + "/"
+
+def read(carpath, crosspath, roadpath):
+    # path = "../" + tag + "/"
     carlist = []
-    with open(path + "car.txt", "r") as carFile:
+    with open(carpath, "r") as carFile:
         for line in carFile.readlines():
             if line[0] != '#':
-                carlist.append(Car.Car(line[1:-1].split(',')))
+                carlist.append(Car(parser(line)))
     crosslist = []
-    with open(path + "cross.txt", "r") as crossFile:
+    with open(crosspath, "r") as crossFile:
         for line in crossFile.readlines():
             if line[0] != '#':
-                crosslist.append(Cross.Cross(line[1:-1].split(',')))
+                crosslist.append(Cross(parser(line)))
     roadlist = []
-    with open(path + "road.txt", "r") as roadFile:
+    with open(roadpath, "r") as roadFile:
         for line in roadFile.readlines():
             if line[0] != '#':
-                roadlist.append(Road.Road(line[1:-1].split(',')))
+                roadlist.append(Road(parser(line)))
 
     return carlist, crosslist, roadlist
+
+
+def parser(str):
+    str = str[str.find('(') + 1:str.find(')')]
+    return str.split(',')
