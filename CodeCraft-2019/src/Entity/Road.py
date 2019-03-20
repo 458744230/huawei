@@ -78,4 +78,5 @@ class Road:
         for key, value in self.history.items():
             max_value = max_value if max_value > value else value
         self.congestion = max_value
+        # self.history = {}  # 计算完清空
         return max_value
