@@ -31,18 +31,21 @@ def main():
 
     car_list, cross_list, road_list = Entity.read(car_path, cross_path, road_path)
 
-    map = Entity.Map(road_list, cross_list, car_list)
+    my_map = Entity.Map(road_list, cross_list, car_list)
+    # partition(car_list)
+    # my_map.plot()
     mini_way = Entity.Min_way(road_list)
-    calculate_all_congestion(car_list, road_list, map, mini_way)
+    # calculate_all_congestion(car_list, road_list, my_map, mini_way)
     # for i in range(5):
     #     mini_way = Entity.Min_way(road_list)
     #     avg_con = calculate_all_congestion(car_list, road_list, map, mini_way)
     #     print("iter %d, avg_con=%lf" % (i, avg_con))
-    write_result(answer_path, car_list, road_list, map, mini_way)
+    write_result(answer_path, car_list, road_list, my_map, mini_way)
 
 
-def calculate_all_congestion(car_list, road_list, map, mini_way):
-    cross_to_road = map.cross_to_road
+# 测试用，计算拥挤度
+def calculate_all_congestion(car_list, road_list, my_map, mini_way):
+    cross_to_road = my_map.cross_to_road
     # 遍历车，求路径，并填充到road.history
     for car in car_list:
         mini_cross_path = mini_way.returnvisitpath(car.fro, car.to)
@@ -51,7 +54,7 @@ def calculate_all_congestion(car_list, road_list, map, mini_way):
         if 100 < bias < 201:
             for i in range(1, mini_cross_path.__len__()):
                 temp_road_id = cross_to_road[mini_cross_path[i - 1] - 1][mini_cross_path[i] - 1]
-                temp_road = map.road_dic[temp_road_id]
+                temp_road = my_map.road_dic[temp_road_id]
                 t = math.ceil(temp_road.length / min(car.speed, temp_road.speed))
                 for j in range(t):
                     if temp_road.history.get(curr_time + j + bias) is None:
@@ -66,17 +69,38 @@ def calculate_all_congestion(car_list, road_list, map, mini_way):
     return sum / road_list.__len__()
 
 
-def write_result(answer_path, car_list, road_list, map, mini_way):
+# 测试分区效果
+def partition(car_list):
+    with open('../../logs/cars.log', 'w') as file:
+        file.seek(0)
+        file.truncate()
+        D = [[0] * 4 for _ in range(4)]
+        for car in car_list:
+            file.write("%d to %d \n" % (car.from_cross.zone, car.to_cross.zone))
+            if car.from_cross.zone == car.to_cross.zone:
+                D[car.from_cross.zone][car.to_cross.zone] += 1
+            else:
+                D[car.from_cross.zone][car.to_cross.zone] += 1
+                D[car.to_cross.zone][car.from_cross.zone] += 1
+        file.write("Transaction Matrix:\n")
+        for i in range(4):
+            for j in range(4):
+                file.write("%d " % D[i][j])
+            file.write('\n')
+
+
+# 将结果写入答案文件
+def write_result(answer_path, car_list, road_list, my_map, mini_way):
     with open(answer_path, 'w') as file:
         file.seek(0)
         file.truncate()
         file.write('#(carId,StartTime,RoadId...)\n')
-        cross_to_road = map.cross_to_road
+        cross_to_road = my_map.cross_to_road
         for car in car_list:
             mini_cross_path = mini_way.returnvisitpath(car.fro, car.to)
             mini_road_path = ""
             # curr_time = car.plan_time
-            bias = math.floor((car.id - 10000) / 100) * 100
+            bias = math.floor((car.id - 10000) / 120) * 12
             for i in range(1, mini_cross_path.__len__()):
                 temp_road_id = cross_to_road[mini_cross_path[i - 1] - 1][mini_cross_path[i] - 1]
                 mini_road_path += "%d," % temp_road_id
@@ -96,10 +120,10 @@ def write_result(answer_path, car_list, road_list, map, mini_way):
         for road in road_list:
             file.write("{%d}[%d]" % (road.id, road.congestion))
             dic_str = ""
-            #max_value = 0
+            # max_value = 0
             for key, value in road.history.items():
                 dic_str += '%d:%d,' % (key, value)
-                #max_value = max_value if max_value > value else value
+                # max_value = max_value if max_value > value else value
             file.write('%s\n' % (dic_str))
 
 

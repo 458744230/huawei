@@ -24,6 +24,9 @@ class Road:
     def get_mid(self):
         return (self.from_cross.x + self.to_cross.x) / 2, (self.from_cross.y + self.to_cross.y) / 2
 
+    def get_min_time(self):
+        return self.length / self.speed
+
     # 往路上添加车，如果没有已调度的车就能停,车确实移动之后把原来的位置腾出来
     # 输入车对象本身，当前位置（不在此road上时为-1），能移动的最远距离，系统当前时间
     def add_car(self, car, to, direction, now_time):

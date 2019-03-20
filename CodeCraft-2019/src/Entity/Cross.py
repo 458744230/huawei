@@ -7,6 +7,7 @@ class Cross:
         self.road = [None] * 4
         self.x = 0
         self.y = 0
+        self.zone = 0  # 分区
         self.flag = 0
         self.magical_garage = []  # 车库里的车应按计划出行时间-id 升序排序
 

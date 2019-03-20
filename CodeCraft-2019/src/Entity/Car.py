@@ -14,6 +14,7 @@ class Car:
         self.pos = 0
         self.ch = 0
         self.direction = 0
+        self.sort_to_go = 0
 
     def get_mid(self):#画车道图用的
         return (self.from_cross.x + self.to_cross.x) / 2, (self.from_cross.y + self.to_cross.y) / 2
