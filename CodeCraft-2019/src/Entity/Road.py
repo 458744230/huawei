@@ -11,12 +11,21 @@ class Road:
         self.is_duplex = input_data[6]
         self.from_cross = None
         self.to_cross = None
-        self.car_in_road = [[[[None] * 2] * self.length] * self.channel] * (
-                1 + self.is_duplex)  # 道路上的车，未调度和已调度的车才能暂时共存，
+        # 道路上的车，未调度和已调度的车才能暂时共存，
         # 维度依次为方向、车道、位置、调度与未调度车辆
+        self.car_in_road = [[[[None] * 2 for i in range(self.length)]
+                             for j in range(self.channel)]
+                            for k in range(self.is_duplex + 1)]
+        # 保存车辆停留信息 key:时间片 value:车数量  暂时忽略其他车导致的速度减少
+        self.history = {}
+        # 拥堵程度，history对应的同一时间片内最大车数
+        self.congestion = 0
 
     def get_mid(self):
         return (self.from_cross.x + self.to_cross.x) / 2, (self.from_cross.y + self.to_cross.y) / 2
+
+    def get_min_time(self):
+        return self.length / self.speed
 
     # 往路上添加车，如果没有已调度的车就能停,车确实移动之后把原来的位置腾出来
     # 输入车对象本身，当前位置（不在此road上时为-1），能移动的最远距离，系统当前时间
@@ -67,3 +76,10 @@ class Road:
         car.now_time = now_time + 1
         return
 
+    def calculate_congestion(self):
+        max_value = 0
+        for key, value in self.history.items():
+            max_value = max_value if max_value > value else value
+        self.congestion = max_value
+        # self.history = {}  # 计算完清空
+        return max_value

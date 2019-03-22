@@ -26,11 +26,13 @@ class Min_way:
                 path[i][j] = INF
 
         for road in road_list:
-            cross_len[road.from_id][road.to_id] = road.length / road.speed  # 得到路径权值，注意这里除了速度
+            cross_len[road.from_id][
+                road.to_id] = road.length / road.speed  # / road.channel + road.congestion * 0.01 # 得到路径权值，注意这里除了速度
             min_num = min(road.from_id, min_num, road.to_id)
             max_num = max(road.from_id, max_num, road.to_id)
             if road.is_duplex == 1:
-                cross_len[road.to_id][road.from_id] = road.length / road.speed  # 双向道赋值相反的道路
+                cross_len[road.to_id][
+                    road.from_id] = road.length / road.speed  # / road.channel + road.congestion * 0.01  # 双向道赋值相反的道路
 
         for k in range(min_num, max_num + 1):
             for i in range(min_num, max_num + 1):
