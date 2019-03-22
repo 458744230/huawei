@@ -32,6 +32,7 @@ class Map:
         self.road_list = road_list
         self.cross_list = cross_list
         self.car_list = car_list
+        self.car_list_v2 = [[],[]]
         self.plot_car = False
         self.plot_road = False
         self.cross_to_road = cross_to_road
@@ -79,11 +80,11 @@ class Map:
                 X.append(x - c0.road[3].get_min_time())
                 Y.append(y)
 
-        dots = np.array([X, Y]).T
-        kmeans = KMeans()
-        zones = kmeans.fit(dots, 4)
-        for i in range(self.cross_list.__len__()):
-            self.cross_list[i].zone = zones[i]
+        # dots = np.array([X, Y]).T
+        # kmeans = KMeans()
+        # zones = kmeans.fit(dots, 4)
+        # for i in range(self.cross_list.__len__()):
+        #     self.cross_list[i].zone = 0 if i > 32 else 1
 
     def plot(self):
         _, ax = plt.subplots()
@@ -114,6 +115,21 @@ class Map:
             X.append(cross.x)
             Y.append(cross.y)
             zones.append(cross.zone)
-
+            plt.annotate('%d' % (cross.id), xy=(cross.x,cross.y))
         plt.scatter(X, Y, c=zones, s=50)
         plt.show()
+
+    def partition(self):
+        car_list = [car for car in self.car_list if car.fro == 1]
+        for car in car_list:
+            car.to_cross.zone = 1
+        for car in self.car_list:
+            if car.from_cross.zone == 0:
+                self.car_list_v2[0].append(car)
+            else:
+                self.car_list_v2[1].append(car)
+        # self.car_list_v2[0].sort(key=lambda x: x.speed, reverse=True)
+        # self.car_list_v2[1].sort(key=lambda x: x.speed, reverse=True)
+
+
+
