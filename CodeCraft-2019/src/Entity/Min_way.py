@@ -8,26 +8,25 @@
 使用弗洛伊德算法，先写出邻接矩阵，距离为权值，求出所有的cross到cross的最短路径，并返回最短路径的二维矩阵。
 '''
 
-INF = 10000000  # 设置最大值；
-
+INF = float("inf")  # 设置最大值；
 
 class Min_way:
-    def __init__(self, road_list):
-        min_num = 10000000  # 最小的cross点
+    def __init__(self, road_list, max_size=128):
+        min_num = max_size  # 最小的cross点
         max_num = -1  # 最大的cross点
-        cross_len = [([0] * 10000) for p in range(10000)]  # 初始化最短路径数组
-        for i in range(10000):
-            for j in range(10000):
+        cross_len = [([0] * max_size) for _ in range(max_size)]  # 初始化最短路径数组
+        for i in range(max_size):
+            for j in range(max_size):
                 cross_len[i][j] = INF
 
-        path = [([0] * 10000) for p in range(10000)]  # 初始化最短路径中间经过的节点
-        for i in range(10000):
-            for j in range(10000):
+        path = [([0] * max_size) for _ in range(max_size)]  # 初始化最短路径中间经过的节点
+        for i in range(max_size):
+            for j in range(max_size):
                 path[i][j] = INF
 
         for road in road_list:
-            cross_len[road.from_id][
-                road.to_id] = road.length / road.speed  # / road.channel + road.congestion * 0.01 # 得到路径权值，注意这里除了速度
+            cross_len[road.from_id][road.to_id] = road.length / road.speed
+            # / road.channel + road.congestion * 0.01 # 得到路径权值，注意这里除了速度
             min_num = min(road.from_id, min_num, road.to_id)
             max_num = max(road.from_id, max_num, road.to_id)
             if road.is_duplex == 1:
@@ -57,6 +56,8 @@ class Min_way:
             self.getpath(visit_path, path, temp_point, end_node)
 
     def returnvisitpath(self, start_node, end_node):
+        if start_node == end_node:
+            return [start_node]
         visit_path = []
         visit_path.append(start_node)
         self.getpath(visit_path, self.path, start_node, end_node)

@@ -1,9 +1,8 @@
 # -----coding:utf-8------
 import matplotlib.pyplot as plt
 import queue
-from .KMeans import *
 from matplotlib.lines import Line2D
-import numpy as np
+import random
 
 
 class Map:
@@ -32,11 +31,15 @@ class Map:
         self.road_list = road_list
         self.cross_list = cross_list
         self.car_list = car_list
-        self.car_list_v2 = [[],[]]
+        self.car_list_v2 = [[], []]
+        self.road_list_v2 = [[], []]
+        self.transfer_station = [set(), set()]
+        self.transfer_road = []
         self.plot_car = False
         self.plot_road = False
         self.cross_to_road = cross_to_road
         self.road_dic = temp_dict1
+        self.cross_dic = temp_dict2
 
         self.find_pos()
 
@@ -123,13 +126,37 @@ class Map:
         car_list = [car for car in self.car_list if car.fro == 1]
         for car in car_list:
             car.to_cross.zone = 1
+        car_list = [car for car in self.car_list if car.to == 1]
+        for car in car_list:
+            car.from_cross.zone = 1
+
         for car in self.car_list:
             if car.from_cross.zone == 0:
                 self.car_list_v2[0].append(car)
             else:
                 self.car_list_v2[1].append(car)
-        # self.car_list_v2[0].sort(key=lambda x: x.speed, reverse=True)
-        # self.car_list_v2[1].sort(key=lambda x: x.speed, reverse=True)
+        self.car_list_v2[0].sort(key=lambda x: x.speed, reverse=True)
+        self.car_list_v2[1].sort(key=lambda x: x.speed, reverse=True)
+        for road in self.road_list:
+            if road.from_cross.zone != road.to_cross.zone:
+                self.transfer_station[road.from_cross.zone].add(road.from_cross)
+                self.transfer_station[road.to_cross.zone].add(road.to_cross)
+                self.transfer_road.append(road)
+            else:
+                self.road_list_v2[road.from_cross.zone].append(road)
 
-
-
+    # 根据权重随机选择路径
+    def get_random_road(self, start):
+        transfer_road = self.transfer_road
+        length = transfer_road.__len__()
+        weight = [0] * (length + 1)
+        for i in range(length):
+            weight[i+1] = transfer_road[i].get_min_time() * transfer_road[i].channel
+        while 1:
+            r = random.random() * weight[length]
+            for i in range(length):
+                if r < weight[i+1]:
+                    if transfer_road[i].from_id == start or transfer_road[i].is_duplex == 1:
+                        return transfer_road[i]
+                    else:
+                        break

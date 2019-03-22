@@ -1,5 +1,5 @@
 # -----coding:utf-8------
-import logging
+# import logging
 import numpy as np
 import sys
 import Entity
@@ -7,16 +7,16 @@ import math
 
 np.set_printoptions(threshold=np.inf)
 
-logging.basicConfig(level=logging.DEBUG,
-                    filename='../../logs/CodeCraft-2019.log',
-                    format='[%(asctime)s] %(levelname)s [%(funcName)s: %(filename)s, %(lineno)d] %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S',
-                    filemode='a')
+# logging.basicConfig(level=logging.DEBUG,
+#                     filename='../../logs/CodeCraft-2019.log',
+#                     format='[%(asctime)s] %(levelname)s [%(funcName)s: %(filename)s, %(lineno)d] %(message)s',
+#                     datefmt='%Y-%m-%d %H:%M:%S',
+#                     filemode='a')
 
 
 def main():
     if len(sys.argv) != 5:
-        logging.info('please input args: car_path, road_path, cross_path, answerPath')
+        # logging.info('please input args: car_path, road_path, cross_path, answerPath')
         exit(1)
 
     car_path = sys.argv[1]
@@ -24,27 +24,30 @@ def main():
     cross_path = sys.argv[3]
     answer_path = sys.argv[4]
 
-    logging.info("car_path is %s" % (car_path))
-    logging.info("road_path is %s" % (road_path))
-    logging.info("cross_path is %s" % (cross_path))
-    logging.info("answer_path is %s" % (answer_path))
+    # logging.info("car_path is %s" % (car_path))
+    # logging.info("road_path is %s" % (road_path))
+    # logging.info("cross_path is %s" % (cross_path))
+    # logging.info("answer_path is %s" % (answer_path))
 
+    # 读入数据
     car_list, cross_list, road_list = Entity.read(car_path, cross_path, road_path)
-    # write_route(car_list,cross_list.__len__())
-    # car_list.sort(key=lambda x: x.speed, reverse=True)
-    mini_way = Entity.Min_way(road_list)
+    # 转换数据
     my_map = Entity.Map(road_list, cross_list, car_list)
-    my_map.partition()
+    # 划分成两个区，并标记中转站
+    # my_map.partition()
+    mini_way = Entity.Min_way(road_list)
+    # mini_way_v2 = [Entity.Min_way(my_map.road_list_v2[0]), Entity.Min_way(my_map.road_list_v2[1])]
     # my_map.plot()
-    # for i in range(car_list.__len__()):
-    #     car_list[i].sort_to_go = i + 1
+    for i in range(car_list.__len__()):
+        car_list[i].sort_to_go = i + 1
     # for j in range(2):
     #     for i in range(my_map.car_list_v2[j].__len__()):
     #         my_map.car_list_v2[j][i].sort_to_go = i + 1
-    # write_result(answer_path, car_list, my_map, mini_way)
-    write_result_v2(answer_path, my_map, mini_way)
+    write_result(answer_path, car_list, my_map, mini_way)
+    # write_result_v2(answer_path, my_map, mini_way_v2)
     # calculate_all_congestion(car_list, road_list, my_map, mini_way)
     # write_road(road_list)
+    # write_route(car_list, cross_list.__len__())
 
 
 # 测试用，计算拥挤度
@@ -119,30 +122,20 @@ def write_result(answer_path, car_list, my_map, mini_way):
         file.seek(0)
         file.truncate()
         file.write('#(carId,StartTime,RoadId...)\n')
-        temp = car_list[0].speed
+        # temp = car_list[0].speed
         cross_to_road = my_map.cross_to_road
         for car in car_list:
             mini_cross_path = mini_way.returnvisitpath(car.fro, car.to)
             mini_road_path = ""
-            # curr_time = car.plan_time
-            # bias = math.floor((car.id - 10000) / 120) * 12
+            bias = ((car.sort_to_go / 120) * 9)
             for i in range(1, mini_cross_path.__len__()):
                 temp_road_id = cross_to_road[mini_cross_path[i - 1] - 1][mini_cross_path[i] - 1]
                 mini_road_path += "%d," % temp_road_id
-                # temp_road = map.road_dic[temp_road_id]
-                # t = math.ceil(temp_road.length / min(car.speed, temp_road.speed))
-                # for j in range(t):
-                #     if temp_road.history.get(curr_time + j + bias) is None:
-                #         temp_road.history[curr_time + j + bias] = 1
-                #     else:
-                #         temp_road.history[curr_time + j + bias] += 1
-                # curr_time += t - 1
-            file.write('(%d,%d,%s)\n' % (
-                    car.id, car.plan_time + (math.floor(car.sort_to_go / 120) * 10), mini_road_path[:-1]))
+            file.write('(%d,%d,%s)\n' % (car.id, car.plan_time + bias, mini_road_path[:-1]))
 
 
 # 将结果写入答案文件 version2
-def write_result_v2(answer_path, my_map, mini_way):
+def write_result_v2(answer_path, my_map, mini_way_v2):
     car_list_v2 = my_map.car_list_v2
     with open(answer_path, 'w') as file:
         file.seek(0)
@@ -151,8 +144,17 @@ def write_result_v2(answer_path, my_map, mini_way):
         for j in range(2):
             cross_to_road = my_map.cross_to_road
             for car in car_list_v2[j]:
-                bias = math.floor((car.id - 10000) / 140) * 10
-                mini_cross_path = mini_way.returnvisitpath(car.fro, car.to)
+                # bias = (math.floor(car.sort_to_go / 100) * 15)
+                bias = ((car.sort_to_go / 100) * 15)
+                z = car.from_cross.zone
+                transfer_road = my_map.get_random_road(z)
+                mini_cross_path = []
+                if car.from_cross.zone == transfer_road.from_cross.zone:
+                    mini_cross_path = mini_way_v2[z].returnvisitpath(car.fro, transfer_road.from_id) + \
+                                      mini_way_v2[1-z].returnvisitpath(transfer_road.to_id, car.to)
+                else:
+                    mini_cross_path = mini_way_v2[z].returnvisitpath(car.fro, transfer_road.to_id) + \
+                                      mini_way_v2[1 - z].returnvisitpath(transfer_road.from_id, car.to)
                 mini_road_path = ""
                 for i in range(1, mini_cross_path.__len__()):
                     temp_road_id = cross_to_road[mini_cross_path[i - 1] - 1][mini_cross_path[i] - 1]
