@@ -18,11 +18,11 @@ class Map:
         for cross in cross_list:
             temp_dict2[cross.id] = cross
         # 创建是否有路的邻接矩阵
-        cross_to_road = [[None] * cross_list.__len__() for _ in range(cross_list.__len__())]
+        # cross_to_road = [[None] * cross_list.__len__() for _ in range(cross_list.__len__())]
         for road in road_list:
-            cross_to_road[road.from_id - 1][road.to_id - 1] = road.id
-            if road.is_duplex == 1:
-                cross_to_road[road.to_id - 1][road.from_id - 1] = road.id
+            # cross_to_road[road.from_id - 1][road.to_id - 1] = road.id
+            # if road.is_duplex == 1:
+            #     cross_to_road[road.to_id - 1][road.from_id - 1] = road.id
             road.from_cross = temp_dict2[road.from_id]
             road.to_cross = temp_dict2[road.to_id]
         for car in car_list:
@@ -32,11 +32,11 @@ class Map:
         self.road_list = road_list
         self.cross_list = cross_list
         self.car_list = car_list
-        self.car_list_v2 = [[],[]]
+        self.car_list_v2 = [[], []]
         self.plot_car = False
         self.plot_road = False
-        self.cross_to_road = cross_to_road
-        self.road_dic = temp_dict1
+        # self.cross_to_road = cross_to_road
+        self.road_dict = temp_dict1
 
         self.find_pos()
 
@@ -123,13 +123,17 @@ class Map:
         car_list = [car for car in self.car_list if car.fro == 1]
         for car in car_list:
             car.to_cross.zone = 1
+        # car_list = [car for car in self.car_list if car.to == 1]
+        # for car in car_list:
+        #     car.from_cross.zone = 1
+
         for car in self.car_list:
             if car.from_cross.zone == 0:
                 self.car_list_v2[0].append(car)
             else:
                 self.car_list_v2[1].append(car)
-        # self.car_list_v2[0].sort(key=lambda x: x.speed, reverse=True)
-        # self.car_list_v2[1].sort(key=lambda x: x.speed, reverse=True)
+        self.car_list_v2[0].sort(key=lambda x: x.speed, reverse=True)
+        self.car_list_v2[1].sort(key=lambda x: x.speed, reverse=True)
 
 
 
